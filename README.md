@@ -1,2 +1,0 @@
-# gophercises_neha
-
