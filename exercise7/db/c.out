@@ -1,0 +1,20 @@
+mode: set
+gophercises/task/db/db.go:20.50,24.16 3 1
+gophercises/task/db/db.go:27.2,27.36 1 1
+gophercises/task/db/db.go:31.2,31.16 1 1
+gophercises/task/db/db.go:24.16,26.3 1 1
+gophercises/task/db/db.go:27.36,30.3 2 1
+gophercises/task/db/db.go:35.40,37.31 2 1
+gophercises/task/db/db.go:41.2,41.43 1 1
+gophercises/task/db/db.go:50.2,50.16 1 1
+gophercises/task/db/db.go:37.31,40.3 2 1
+gophercises/task/db/db.go:41.43,48.3 4 1
+gophercises/task/db/db.go:54.33,56.41 2 1
+gophercises/task/db/db.go:67.2,67.19 1 1
+gophercises/task/db/db.go:56.41,59.52 3 1
+gophercises/task/db/db.go:65.3,65.13 1 1
+gophercises/task/db/db.go:59.52,64.4 1 1
+gophercises/task/db/db.go:71.32,72.43 1 1
+gophercises/task/db/db.go:72.43,75.3 2 1
+gophercises/task/db/db.go:79.25,84.2 4 1
+gophercises/task/db/db.go:86.25,88.2 1 1
