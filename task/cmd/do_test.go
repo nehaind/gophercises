@@ -17,7 +17,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestDoTask(t *testing.T) {
-	db, _ := db.Initialize("C:\\Users\\gs-1553\\go\\src\\gophercises\\task\\db\\newDB")
+	db, _ := db.Initialize("/home/neha/dev/src/gophercises/task/db/newDB")
 	file, _ := os.OpenFile("testing.txt", os.O_CREATE|os.O_RDWR, 0666)
 	oldStdout := os.Stdout
 	os.Stdout = file
@@ -40,7 +40,7 @@ func TestDoTask(t *testing.T) {
 }
 
 func TestDoTaskInvalidIndex(t *testing.T) {
-	db, _ := db.Initialize("C:\\Users\\gs-1553\\go\\src\\gophercises\\task\\db\\newDB")
+	db, _ := db.Initialize("/home/neha/dev/src/gophercises/task/db/newDB")
 	file, _ := os.OpenFile("testing.txt", os.O_CREATE|os.O_RDWR, 0666)
 	oldStdout := os.Stdout
 	os.Stdout = file
@@ -63,7 +63,7 @@ func TestDoTaskInvalidIndex(t *testing.T) {
 }
 
 func TestDoTaskIndexNotPresent(t *testing.T) {
-	db, _ := db.Initialize("C:\\Users\\gs-1553\\go\\src\\gophercises\\task\\db\\newDB")
+	db, _ := db.Initialize("/home/neha/dev/src/gophercises/task/db/newDB")
 	file, _ := os.OpenFile("testing.txt", os.O_CREATE|os.O_RDWR, 0666)
 	oldStdout := os.Stdout
 	os.Stdout = file

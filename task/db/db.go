@@ -20,10 +20,8 @@ type task struct {
 func Initialize(dbPath string) (*bolt.DB, error) {
 	var err error
 
-	db, err = bolt.Open(dbPath, 0600, &bolt.Options{Timeout: 2 * time.Second})
-	if err != nil {
-		return nil, err
-	}
+	db, _ = bolt.Open(dbPath, 0600, &bolt.Options{Timeout: 2 * time.Second})
+
 	db.Update(func(tx *bolt.Tx) error {
 		_, err = tx.CreateBucketIfNotExists([]byte(taskBucket))
 		return err

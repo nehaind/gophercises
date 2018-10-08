@@ -12,7 +12,7 @@ import (
 )
 
 func TestAdd(t *testing.T) {
-	dbc, _ := db.Initialize("C:\\Users\\gs-1553\\go\\src\\gophercises\\task\\db\\newDB")
+	dbc, _ := db.Initialize("/home/neha/dev/src/gophercises/task/db/newDB")
 	file, _ := os.OpenFile("testing.txt", os.O_CREATE|os.O_RDWR, 0666)
 	oldStdout := os.Stdout
 	os.Stdout = file
