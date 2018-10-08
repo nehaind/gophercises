@@ -32,14 +32,13 @@ value added at index:  1
 neha@GS-4301:~/dev/src/gophercises/task$ ./task list
 index:  1  value:  new task
 
-- For marking the task as complete do the following:<br>
-
-neha@GS-4301:~/dev/src/gophercises/task$ ./task do 1
+- For marking the task as complete: <br>
+neha@GS-4301:~/dev/src/gophercises/task$ ./task do 1<br>
 marked the task as done and removed from the queue
 neha@GS-4301:~/dev/src/gophercises/task$ ./task list
 no element in the list
 
-**2.Recover middleware/ Exercise 15 ** <br>
+**2.Recover middleware/ Exercise 15** <br>
 
 main ![alt coverage](https://github.com/nehaind/gophercises/blob/master/exercise15/coverage.svg) <br>
 The Recover Middleware create some HTTP middleware that recovers from any panics in our application and renders a stack trace on the browser. The stack trace on the bowser displays the text in form of links. On clicking on each link the user is redirected to the page from where the panic has occured. The line is also hightlighted.
