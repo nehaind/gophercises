@@ -5,8 +5,8 @@ main ![alt coverage](https://github.com/nehaind/gophercises/blob/master/task/cov
 db ![alt coverage](https://github.com/nehaind/gophercises/blob/master/task/db/coverage.svg)<br>
 cmd ![alt coverage](https://github.com/nehaind/gophercises/blob/master/task/cmd/coverage.svg)<br><br>
 
-Usage: Task is the command line TODO list. The application is build using GOlang and BoltDB. The task works as following:
-**- The task command:**
+**Usage:** Task is the command line TODO list. The application is build using GOlang and BoltDB. The task works as following:<br>
+- The task command:<br>
 neha@GS-4301:~/dev/src/gophercises/task$ ./task
 Task is a CLI task manager
 
@@ -28,11 +28,11 @@ Use "task [command] --help" for more information about a command.
 neha@GS-4301:~/dev/src/gophercises/task$ ./task add "new task"
 value added at index:  1
 
-**- For listing the task on the TODO list:**
+- For listing the task on the TODO list:<br>
 neha@GS-4301:~/dev/src/gophercises/task$ ./task list
 index:  1  value:  new task
 
-**- For marking the task as complete do the following: **
+- For marking the task as complete do the following:<br>
 
 neha@GS-4301:~/dev/src/gophercises/task$ ./task do 1
 marked the task as done and removed from the queue
