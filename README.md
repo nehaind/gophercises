@@ -7,7 +7,7 @@ cmd ![alt coverage](https://github.com/nehaind/gophercises/blob/master/task/cmd/
 
 **Usage:** Task is the command line TODO list. The application is build using GOlang and BoltDB. The task works as following:<br>
 - The task command:<br>
-neha@GS-4301:~/dev/src/gophercises/task$ ./task
+$ ./task
 Task is a CLI task manager
 
 Usage:
@@ -25,17 +25,18 @@ Flags:
 Use "task [command] --help" for more information about a command.
 - For adding a new value:
 
-neha@GS-4301:~/dev/src/gophercises/task$ ./task add "new task"
+$ ./task add "new task"
 value added at index:  1
 
 - For listing the task on the TODO list:<br>
-neha@GS-4301:~/dev/src/gophercises/task$ ./task list
+
+$ ./task list
 index:  1  value:  new task
 
 - For marking the task as complete: <br>
-neha@GS-4301:~/dev/src/gophercises/task$ ./task do 1<br>
+$ ./task do 1<br>
 marked the task as done and removed from the queue
-neha@GS-4301:~/dev/src/gophercises/task$ ./task list
+$ ./task list
 no element in the list
 
 **2.Recover middleware/ Exercise 15** <br>
