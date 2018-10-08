@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gophercises/task/db"
+	"gophercises_neha/exercise7/task/db"
 )
 
 func main() {

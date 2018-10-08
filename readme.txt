@@ -6,3 +6,4 @@ main ![alt coverage](https://github.com/nehaind/gophercises/blob/master/exercise
 2.Recover middleware/ Exercise 15 <br>
 main ![alt coverage](https://github.com/nehaind/gophercises/blob/master/exercise15/coverage.svg)<br>
 
+3
