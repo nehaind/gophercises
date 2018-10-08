@@ -21,7 +21,7 @@ func TestDoTask(t *testing.T) {
 	file, _ := os.OpenFile("testing.txt", os.O_CREATE|os.O_RDWR, 0666)
 	oldStdout := os.Stdout
 	os.Stdout = file
-	a := []string{"5"}
+	a := []string{"10"}
 	docmd.Run(docmd, a)
 	file.Seek(0, 0)
 	content, err := ioutil.ReadAll(file)
@@ -52,7 +52,7 @@ func TestDoTaskInvalidIndex(t *testing.T) {
 		t.Error("error occured while test case : ", err)
 	}
 	output := string(content)
-	val := strings.Contains(output, "marked the task as done and removed from the queue")
+	val := strings.Contains(output, "error occured")
 	assert.Equalf(t, true, val, "they should be equal")
 	file.Truncate(0)
 	file.Seek(0, 0)
@@ -75,7 +75,7 @@ func TestDoTaskIndexNotPresent(t *testing.T) {
 		t.Error("error occured while test case : ", err)
 	}
 	output := string(content)
-	val := strings.Contains(output, "could not complete the task")
+	val := strings.Contains(output, "marked the task as done and removed from the queue")
 	assert.Equalf(t, true, val, "they should be equal")
 	file.Truncate(0)
 	file.Seek(0, 0)
