@@ -1,0 +1,27 @@
+mode: set
+gophercises/transform/main.go:16.13,27.2 6 1
+gophercises/transform/main.go:29.59,37.2 2 1
+gophercises/transform/main.go:39.60,41.16 2 0
+gophercises/transform/main.go:82.2,82.16 1 0
+gophercises/transform/main.go:41.16,45.17 4 0
+gophercises/transform/main.go:50.3,52.17 3 0
+gophercises/transform/main.go:57.3,59.17 3 0
+gophercises/transform/main.go:64.3,66.17 3 0
+gophercises/transform/main.go:72.3,79.25 4 0
+gophercises/transform/main.go:45.17,46.14 1 0
+gophercises/transform/main.go:47.4,48.10 2 0
+gophercises/transform/main.go:52.17,53.14 1 0
+gophercises/transform/main.go:54.4,55.10 2 0
+gophercises/transform/main.go:59.17,60.14 1 0
+gophercises/transform/main.go:61.4,62.10 2 0
+gophercises/transform/main.go:66.17,67.14 1 0
+gophercises/transform/main.go:68.4,69.10 2 0
+gophercises/transform/main.go:82.16,85.3 2 0
+gophercises/transform/main.go:88.97,92.16 2 0
+gophercises/transform/main.go:95.2,96.16 2 0
+gophercises/transform/main.go:99.2,101.28 3 0
+gophercises/transform/main.go:92.16,94.3 1 0
+gophercises/transform/main.go:96.16,98.3 1 0
+gophercises/transform/main.go:114.53,116.16 2 1
+gophercises/transform/main.go:119.2,120.56 2 1
+gophercises/transform/main.go:116.16,118.3 1 0
