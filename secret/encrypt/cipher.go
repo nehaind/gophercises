@@ -1,4 +1,4 @@
-package cypher
+package encrypt
 
 import (
 	"crypto/aes"
@@ -10,26 +10,26 @@ import (
 	"io"
 )
 
-//Encrypt function
-func Encrypt(key, text string) (string, error) {
+// Encrypt will take in a key and plaintext and return a hex representation
+// of the encrypted value.
+func Encrypt(key, plaintext string) (string, error) {
+	block, _ := cipherBlock(key)
 
-	cipherKey, _ := newCipherBlock(key)
-
-	ciphertext := make([]byte, aes.BlockSize+len(text))
+	ciphertext := make([]byte, aes.BlockSize+len(plaintext))
 	iv := ciphertext[:aes.BlockSize]
-	if _, err := io.ReadFull(rand.Reader, iv); err == nil {
-		stream := cipher.NewCFBEncrypter(cipherKey, iv)
-		stream.XORKeyStream(ciphertext[aes.BlockSize:], []byte(text))
-
+	_, err := io.ReadFull(rand.Reader, iv)
+	if err == nil {
+		stream := cipher.NewCFBEncrypter(block, iv)
+		stream.XORKeyStream(ciphertext[aes.BlockSize:], []byte(plaintext))
 	}
-
-	return fmt.Sprintf("%x", ciphertext), nil
+	return fmt.Sprintf("%x", ciphertext), err
 }
 
-//Decrypt will decrypt the key value
+// Decrypt will take in a key and a cipherHex (hex representation of
+// the ciphertext) and decrypt it.
 func Decrypt(key, cipherHex string) (string, error) {
 	var ciphertext []byte
-	block, err := newCipherBlock(key)
+	block, err := cipherBlock(key)
 	if err == nil {
 		ciphertext, err = hex.DecodeString(cipherHex)
 		if err == nil {
@@ -38,16 +38,13 @@ func Decrypt(key, cipherHex string) (string, error) {
 				ciphertext = ciphertext[aes.BlockSize:]
 
 				stream := cipher.NewCFBDecrypter(block, iv)
-
-				// XORKeyStream can work in-place if the two arguments are the same.
 				stream.XORKeyStream(ciphertext, ciphertext)
 			}
 		}
 	}
 	return string(ciphertext), err
 }
-
-func newCipherBlock(key string) (cipher.Block, error) {
+func cipherBlock(key string) (cipher.Block, error) {
 	hasher := md5.New()
 	fmt.Fprint(hasher, key)
 	cipherKey := hasher.Sum(nil)
