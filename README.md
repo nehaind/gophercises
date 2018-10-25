@@ -49,4 +49,14 @@ The exercise covers,
 - Recoving panic 
 - Rendering source code on the borwser and highligthing the text using the chroma package.
 
-3
+**3.Secret 7**<br>
+main ![alt coverage](https://github.com/nehaind/gophercises/tree/master/secret/coverage.svg) <br>
+cmd ![alt coverage](https://github.com/nehaind/gophercises/blob/master/secret/cmd/coverage.svg)<br>
+encrpyt ![alt coverage](https://github.com/nehaind/gophercises/blob/master/secret/encrypt/coverage.svg)<br>
+vault ![alt coverage](https://github.com/nehaind/gophercises/blob/master/secret/vault/coverage.svg)
+The exercise covers,
+A command line tool which takes key and the input to be encryptes and stores it in the file.<br>
+The tool also decrypts the input by providing the same key
+
+
+**Usage:**
