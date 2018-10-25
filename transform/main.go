@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"gophercises/transform/transform"
 	"html/template"
 	"io"
 	"io/ioutil"
@@ -11,142 +10,200 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
+
+	"gophercises/Exercise_18/primitive"
+
+	homedir "github.com/mitchellh/go-homedir"
 )
 
+var listenAndServeFunc = http.ListenAndServe
+
 func main() {
-
+	h, _ := homedir.Dir()
+	imgPath := filepath.Join(h, "img")
 	mux := http.NewServeMux()
-	fs := http.FileServer(http.Dir("./img"))
+	fs := http.FileServer(http.Dir(imgPath))
 	mux.Handle("/img/", http.StripPrefix("/img", fs))
-	mux.HandleFunc("/", indexHandler)
-
-	mux.HandleFunc("/upload", upLoadHandler)
-
-	log.Fatal(http.ListenAndServe(":3000", mux))
-
+	mux.HandleFunc("/", index)
+	mux.HandleFunc("/upload", upload)
+	mux.HandleFunc("/modify/", modify)
+	log.Fatal(listenAndServeFunc(":8888", mux))
 }
 
-func indexHandler(w http.ResponseWriter, r *http.Request) {
+func index(w http.ResponseWriter, r *http.Request) {
 	html := `<html><body>
-	<form action="/upload" method="post" enctype="multipart/form-data">
-		<input type="file" name="image">
-		<button type="submit">Upload Image</button>
-	</form>
-	</body></html>`
+			<form action="/upload" method="post" enctype="multipart/form-data">
+				<input type="file" name="image">
+				<button type="submit">Upload Image</button>
+			</form>
+			</body></html>`
 	fmt.Fprint(w, html)
 }
 
-func upLoadHandler(w http.ResponseWriter, r *http.Request) {
-	file, header, err := r.FormFile("image")
+func upload(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("upload works")
+	var err error
+	file, h, err := r.FormFile("image")
 	if err == nil {
 		defer file.Close()
-		ext := filepath.Ext(header.Filename)[1:]
-		a, err := generateImage(file, ext, 33, transform.ModeCircle)
-		if err != nil {
-			panic(err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+		e := filepath.Ext(h.Filename)[1:]
+		finalFile, err := createTempFile("", e)
+		if err == nil {
+			defer finalFile.Close()
+			io.Copy(finalFile, file)
+			http.Redirect(w, r, "/modify/"+filepath.Base(finalFile.Name()), http.StatusFound)
 		}
-		file.Seek(0, 0)
-		b, err := generateImage(file, ext, 33, transform.ModeEllipse)
-		if err != nil {
-			panic(err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		file.Seek(0, 0)
-		c, err := generateImage(file, ext, 33, transform.ModePolygon)
-		if err != nil {
-			panic(err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		file.Seek(0, 0)
-		d, err := generateImage(file, ext, 33, transform.ModeCombo)
-		if err != nil {
-			panic(err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
+	}
+	http.Error(w, "error occured in upload", http.StatusInternalServerError)
+	return
+}
 
+func modify(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+	h, _ := homedir.Dir()
+	imgPath := filepath.Join(h, "img")
+	f, err := os.Open(imgPath + "/" + filepath.Base(r.URL.Path))
+	if err == nil {
+		defer f.Close()
+		ext := filepath.Ext(f.Name())[1:]
+		modeStr := r.FormValue("mode")
+		if modeStr == "" {
+			renderModeChoices(w, r, f, ext)
+			return
+		}
+		mode, err := strconv.Atoi(modeStr)
+		if err == nil {
+			nStr := r.FormValue("n")
+			if nStr == "" {
+				renderNumShapeChoices(w, r, f, ext, primitive.Mode(mode))
+				return
+			}
+			_, err = strconv.Atoi(nStr)
+			if err == nil {
+				http.Redirect(w, r, "/img/"+filepath.Base(f.Name()), http.StatusFound)
+				return
+			}
+		}
+	}
+	http.Error(w, "error occured in modify", http.StatusBadRequest)
+}
+
+func renderModeChoices(w http.ResponseWriter, r *http.Request, rs io.ReadSeeker, ext string) {
+	var err error
+	opts := []genOpts{
+		{N: 10, M: primitive.ModeCircle},
+		{N: 10, M: primitive.ModeBeziers},
+		{N: 10, M: primitive.ModePolygon},
+		{N: 10, M: primitive.ModeCombo},
+	}
+	imgs, err := genImages(rs, ext, opts...)
+	if err == nil {
 		html := `<html><body>
 			{{range .}}
-				<img src="/{{.}}">
+				<a href="/modify/{{.Name}}?mode={{.Mode}}">
+					<img style="width: 20%;" src="/img/{{.Name}}">
+				</a>
 			{{end}}
 			</body></html>`
 		tpl := template.Must(template.New("").Parse(html))
-		images := []string{a, b, c, d}
-		tpl.Execute(w, images)
-	}
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		type dataStruct struct {
+			Name string
+			Mode primitive.Mode
+		}
+		var data []dataStruct
+		for i, img := range imgs {
+			data = append(data, dataStruct{
+				Name: filepath.Base(img),
+				Mode: opts[i].M,
+			})
+		}
+		err = tpl.Execute(w, data)
 		return
 	}
-
-}
-func generateImage(file io.Reader, ext string, number int, mode transform.Mode) (string, error) {
-	out, err := transform.Transform(file, ext, number, mode)
-
-	//	out, err := primitive.Transform(r, ext, numShapes, primitive.WithMode(mode))
-	if err != nil {
-		return "", err
-	}
-	outFile, err := tempfile("", ext)
-	if err != nil {
-		return "", err
-	}
-	defer outFile.Close()
-	io.Copy(outFile, out)
-	return outFile.Name(), nil
-
-	//some changes required
-	// Outfile, err := os.Open(out) // For read access.
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// temp, err := tempfile("", ext)
-	// defer Outfile.Close()
-	// io.Copy(temp, Outfile)
-	// return temp.Name(), nil
+	http.Error(w, "error occured in render mode choices", http.StatusInternalServerError)
 }
 
-func tempfile(prefix, ext string) (*os.File, error) {
-	in, err := ioutil.TempFile("./img/", prefix)
-	if err != nil {
-		return nil, errors.New("main: failed to create temporary file")
+func renderNumShapeChoices(w http.ResponseWriter, r *http.Request, rs io.ReadSeeker, ext string, mode primitive.Mode) {
+	var err error
+	opts := []genOpts{
+		{N: 10, M: mode},
+		{N: 20, M: mode},
+		{N: 30, M: mode},
+		{N: 40, M: mode},
 	}
-	defer os.Remove(in.Name())
-	return os.Create(fmt.Sprintf("%s.%s", in.Name(), ext))
+	imgs, err := genImages(rs, ext, opts...)
+	if err == nil {
+		html := `<html><body>
+			{{range .}}
+				<a href="/modify/{{.Name}}?mode={{.Mode}}&n={{.NumShapes}}">
+					<img style="width: 20%;" src="/img/{{.Name}}">
+				</a>
+			{{end}}
+			</body></html>`
+		tpl := template.Must(template.New("").Parse(html))
+		type dataStruct struct {
+			Name      string
+			Mode      primitive.Mode
+			NumShapes int
+		}
+		var data []dataStruct
+		for i, img := range imgs {
+			data = append(data, dataStruct{
+				Name:      filepath.Base(img),
+				Mode:      opts[i].M,
+				NumShapes: opts[i].N,
+			})
+		}
+		err = tpl.Execute(w, data)
+		return
+	}
+	http.Error(w, "Error occured in rendering number of choices", http.StatusInternalServerError)
 }
 
-// w.Header().Set("Content-Type", "image/png")
-// switch ext {
-// case "jpg":
-// 	fallthrough
-// case "jpeg":
-// 	w.Header().Set("Content-Type", "image/jpeg")
-// case "png":
-// 	w.Header().Set("Content-Type", "image/png")
-// default:
-// 	http.Error(w, fmt.Sprintf("invalid image type %s", ext), http.StatusBadRequest)
-// 	return
-// }
+type genOpts struct {
+	N int
+	M primitive.Mode
+}
 
-//defer os.Remove(in.Name())
-// outputBuffer, err := ioutil.ReadFile(out)
-// ioutil.WriteFile("out1.png", outputBuffer, 0644)
-// w.Write(outputBuffer)
-// fmt.Println(w)
+func genImages(rs io.ReadSeeker, ext string, opts ...genOpts) ([]string, error) {
+	var ret []string
+	var err error
+	var f string
+	for _, opt := range opts {
+		rs.Seek(0, 0)
+		f, err = genImage(rs, ext, opt.N, opt.M)
+		if err == nil {
+			ret = append(ret, f)
+		}
+	}
+	return ret, err
+}
 
-// io.Copy(w, out)
+func genImage(r io.Reader, ext string, numShapes int, mode primitive.Mode) (string, error) {
+	var outFile *os.File
+	var err error
+	var out io.Reader
+	out, err = primitive.Transform(r, ext, numShapes, primitive.WithMode(mode))
+	if err == nil {
+		outFile, err = createTempFile("", ext)
+		if err == nil {
+			defer outFile.Close()
+			io.Copy(outFile, out)
+			return outFile.Name(), err
+		}
+	}
+	return "", err
+}
 
-// inFile, err := os.Open("/home/neha/dev/src/gophercises/out.png")
-// if err != nil {
-// 	panic(err)
-// }
-// defer inFile.Close()
-// _, err = transform.Transform(inFile, 33)
-// if err != nil {
-// 	fmt.Println("error in transform", err)
-// }
+func createTempFile(name, e string) (*os.File, error) {
+	h, _ := homedir.Dir()
+	imgPath := filepath.Join(h, "img")
+	f, err := ioutil.TempFile(imgPath+"/", name)
+	if err != nil {
+		return nil, errors.New("failed to create temporary file")
+	}
+	defer os.Remove(f.Name())
+	return os.Create(fmt.Sprintf("%s.%s", f.Name(), e))
+}
