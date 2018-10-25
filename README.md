@@ -50,7 +50,7 @@ The exercise covers,
 - Rendering source code on the borwser and highligthing the text using the chroma package.
 
 **3.Secret**<br>
-main ![alt coverage](https://github.com/nehaind/gophercises/tree/master/secret/coverage.svg) <br>
+main ![alt coverage](https://github.com/nehaind/gophercises/blob/master/secret/coverage.svg) <br>
 cmd ![alt coverage](https://github.com/nehaind/gophercises/blob/master/secret/cmd/coverage.svg)<br>
 encrpyt ![alt coverage](https://github.com/nehaind/gophercises/blob/master/secret/encrypt/coverage.svg)<br>
 vault ![alt coverage](https://github.com/nehaind/gophercises/blob/master/secret/vault/coverage.svg)
