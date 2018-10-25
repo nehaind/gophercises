@@ -65,3 +65,8 @@ Value set!<br>
 $ secret get twitter_api_key -k "your-encoding-key"<br>
 "some value here"<br>
 
+**3.Transform**<br>
+main ![alt coverage](https://github.com/nehaind/gophercises/blob/master/transform/coverage.svg) <br>
+cmd ![alt coverage](https://github.com/nehaind/gophercises/blob/master/transform/primitive/coverage.svg)<br>
+**Usage:**<br>
+Creating a web server where the user uploads an image, and then is guided through a selection process using various options on the primitive CLI.
