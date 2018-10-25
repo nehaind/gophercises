@@ -49,14 +49,19 @@ The exercise covers,
 - Recoving panic 
 - Rendering source code on the borwser and highligthing the text using the chroma package.
 
-**3.Secret 7**<br>
+**3.Secret**<br>
 main ![alt coverage](https://github.com/nehaind/gophercises/tree/master/secret/coverage.svg) <br>
 cmd ![alt coverage](https://github.com/nehaind/gophercises/blob/master/secret/cmd/coverage.svg)<br>
 encrpyt ![alt coverage](https://github.com/nehaind/gophercises/blob/master/secret/encrypt/coverage.svg)<br>
 vault ![alt coverage](https://github.com/nehaind/gophercises/blob/master/secret/vault/coverage.svg)
+<br>**Usage:**
 The exercise covers,
 A command line tool which takes key and the input to be encryptes and stores it in the file.<br>
-The tool also decrypts the input by providing the same key
+The tool also decrypts the input by providing the same key<br>
+It contains two function get and set for performing the above options,
 
+$ secret set twitter_api_key "some value here" -k "your-encoding-key"<br>
+Value set!<br>
+$ secret get twitter_api_key -k "your-encoding-key"<br>
+"some value here"<br>
 
-**Usage:**
