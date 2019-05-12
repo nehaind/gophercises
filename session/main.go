@@ -7,5 +7,7 @@ import (
 func main() {
 	fmt.Println("Hello")
 	fmt.Println("Hello")
-	fmt.Println("added a commit")
+	fmt.Println("again a change")
+	fmt.Println("one more time")
+
 }
